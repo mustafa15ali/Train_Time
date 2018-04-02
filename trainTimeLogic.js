@@ -1,13 +1,13 @@
-  // Initialize Firebase
-  var config = {
+// Initialize Firebase
+var config = {
     apiKey: "AIzaSyDEKw09IoohKt3agTL1slkB2I-Dv_rfG7Y",
     authDomain: "train-scheduler-29f9e.firebaseapp.com",
     databaseURL: "https://train-scheduler-29f9e.firebaseio.com",
     projectId: "train-scheduler-29f9e",
-    storageBucket: "train-scheduler-29f9e.appspot.com",
+    storageBucket: "",
     messagingSenderId: "286120639896"
-  };
-  firebase.initializeApp(config);
+};
+firebase.initializeApp(config);
 
 var database = firebase.database();
 
@@ -18,14 +18,14 @@ $("#add-train-btn").on("click", function (event) {
     // Grabs user input
     var trainName = $("#trainNameInput").val().trim();
     var trainDestination = $("#destinationInput").val().trim();
-    var firstTrain = moment($("#trainInput").val().trim(), "HH:mm").format("X");
+    var trainSchedule = moment($("#trainInput").val().trim(), "HH:mm").format("X");
     var trainFrequency = $("#frequencyInput").val().trim();
 
     // Creates local "temporary" object for holding train data
     var newTrain = {
         name: trainName,
         destination: trainDestination,
-        train: firstTrain,
+        train: trainSchedule,
         frequency: trainFrequency
     };
 
@@ -54,20 +54,20 @@ database.ref().on("child_added", function (snapshot, prevChildKey) {
     console.log(snapshot.val());
 
     // Store everything into a variable.
-    var trainName = snapshot.val().name;
-    var trainDestination = snapshot.val().destination;
-    var firstTrain = snapshot.val().train;
-    var trainFrequency = snapshot.val().frequency;
+    trainName = snapshot.val().name;
+    trainDestination = snapshot.val().destination;
+    trainSchedule = snapshot.val().train;
+    trainFrequency = snapshot.val().frequency;
 
     // Train Info
     console.log(trainName);
     console.log(trainDestination);
-    console.log(firstTrain);
+    console.log(trainSchedule);
     console.log(trainFrequency);
 
     // Prettify the train start
-    var trainStartPretty = moment.unix(firstTrain).format("HH:mm a");
-    var trainTime = moment().diff(moment.unix(firstTrain, "X"), "HH:mm");
+    var trainStartPretty = moment.unix(trainSchedule).format("HH:mm a");
+    var trainTime = moment().diff(moment.unix(trainSchedule, "X"), "HH:mm");
     var divided = trainTime / trainFrequency;
 
     console.log("here is trainTime " + divided);
